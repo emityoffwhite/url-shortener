@@ -120,6 +120,4 @@ GitHub Actions при каждом push/PR в `main`:
 - [ ] Метрики Prometheus (`/metrics`)
 - [ ] Кэш горячих ссылок в Redis перед основным хранилищем
 
-## Лицензия
 
-MIT
