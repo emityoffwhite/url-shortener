@@ -76,9 +76,14 @@ func TestHandleRedirect(t *testing.T) {
 	}
 
 	body, _ := json.Marshal(shortenRequest{URL: "https://example.com/target"})
-	createResp, _ := http.Post(srv.URL+"/api/v1/shorten", "application/json", bytes.NewReader(body))
+	createResp, err := http.Post(srv.URL+"/api/v1/shorten", "application/json", bytes.NewReader(body))
+	if err != nil {
+		t.Fatalf("POST request failed: %v", err)
+	}
 	var created shortenResponse
-	json.NewDecoder(createResp.Body).Decode(&created)
+	if err := json.NewDecoder(createResp.Body).Decode(&created); err != nil {
+		t.Fatalf("decode create response: %v", err)
+	}
 	createResp.Body.Close()
 
 	resp, err := client.Get(srv.URL + "/" + created.ShortCode)
@@ -133,12 +138,20 @@ func TestHandleDelete(t *testing.T) {
 	defer srv.Close()
 
 	body, _ := json.Marshal(shortenRequest{URL: "https://example.com"})
-	createResp, _ := http.Post(srv.URL+"/api/v1/shorten", "application/json", bytes.NewReader(body))
+	createResp, err := http.Post(srv.URL+"/api/v1/shorten", "application/json", bytes.NewReader(body))
+	if err != nil {
+		t.Fatalf("POST request failed: %v", err)
+	}
 	var created shortenResponse
-	json.NewDecoder(createResp.Body).Decode(&created)
+	if err := json.NewDecoder(createResp.Body).Decode(&created); err != nil {
+		t.Fatalf("decode create response: %v", err)
+	}
 	createResp.Body.Close()
 
-	req, _ := http.NewRequest(http.MethodDelete, srv.URL+"/api/v1/"+created.ShortCode, nil)
+	req, err := http.NewRequest(http.MethodDelete, srv.URL+"/api/v1/"+created.ShortCode, nil)
+	if err != nil {
+		t.Fatalf("build DELETE request: %v", err)
+	}
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		t.Fatalf("DELETE request failed: %v", err)
