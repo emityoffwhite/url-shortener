@@ -1,0 +1,18 @@
+# Бинарники
+/bin/
+/server
+*.exe
+
+# Файлы покрытия тестов
+coverage.out
+coverage.html
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+
+# Переменные окружения (на случай если кто-то добавит .env)
+.env
